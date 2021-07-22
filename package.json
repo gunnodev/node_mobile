@@ -1,0 +1,23 @@
+{
+    "name": "nodejs-edge",
+    "version": "1.0.0",
+    "description": "Complete Node.js Vi2-Edge",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon app.js",
+        "start-server": "node app.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "nodemon": "^1.19.4"
+    },
+    "dependencies": {
+        "axios": "^0.21.1",
+        "express": "4.17.1",
+        "jsonwebtoken": "^8.5.1",
+        "mongo": "^0.1.0",
+        "mqtt": "^4.2.6"
+    }
+}
