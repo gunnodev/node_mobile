@@ -1,10 +1,12 @@
 const mongodb = require('mongodb');
+const setting = require('./setting');
 const MongoClient = mongodb.MongoClient;
 
 let _db;
 
 const mongoConnect = callback => {
-        MongoClient.connect('mongodb://freeman:abcd1234@192.168.1.22:27011/lpr_jetson?authSource=admin')
+    console.log(setting.connection_string);
+    MongoClient.connect(setting.connection_string)
         .then(client => {
             console.log('Connected!');
             _db = client.db();

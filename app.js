@@ -1,10 +1,18 @@
 const express  = require('express');
 const app = express();
+const path = require('path');
+const axios = require("axios");
 const mongoConnect = require('./util/database').mongoConnect;
+const getDb = require('./util/database').getDb;
+const setting = require('./util/setting');
 
 const intelRoutes = require('./routes/intel');
 const edgeRoutes = require('./routes/edge');
 const loginRoutes = require('./routes/login');
+
+app.use(express.static('public'));
+
+var checkpoint_data = {};
 
 app.use(express.json());
 app.use((req, res, next) => {
@@ -17,6 +25,28 @@ app.use((req, res, next) => {
 app.use("/auth", loginRoutes);
 app.use("/intel", intelRoutes);
 app.use("/edge", verifyToken, edgeRoutes);
+
+app.get("/dashboard", (req, res) => {
+    res.sendFile(path.join(__dirname+'/pages/index.html'));
+})
+
+app.get("/getStatTarget", (req, res) => {
+    //  getStatTarget
+    axios.get('http://' + setting.centreIP + ':7101/getStatTarget?checkpoint='+checkpoint_data.checkpoint)
+        .then(function (response) {
+            console.log(response.data);
+            res.status(200).json({
+                data: response.data.data,
+                status: true
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+            res.status(200).json({
+                status: false
+            });
+        });
+});
 
 //Verify Token
 function verifyToken(req,res,next){
@@ -49,7 +79,14 @@ app.use((req, res, next) => {
 });
 
 mongoConnect(() => {
-    app.listen(3004, () => {
-        console.log("start node port 3004");
+    const db = getDb();
+    db.collection('setting').findOne().then(checkpoint => {
+        checkpoint_data = checkpoint;
+        console.log(checkpoint);
+        if(checkpoint){
+            app.listen(3004, () => {
+                console.log("start node port 3004");
+            });
+        }
     });
 });

@@ -1,0 +1,153 @@
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/style.css">
+<link href="js/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <button style="float : right;" class="btn btn-success" onClick="location.reload();">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <strong>จุดตรวจ</strong> :
+                    <p class="inline-block" id="checkpoint_name"></p>
+                    <br>
+                    <strong>เริ่มตั้งจุดตรวจ</strong> :
+                    <p class="inline-block" id="start_date"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-10">
+        <div class="col-6">
+            <div class="card box-count color-green">
+                <div class="card-body">
+                    <div class="name-data">จำนวนที่ตรวจพบ</div>
+                    <div class="count-data" id="detection"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card box-count color-red">
+                <div class="card-body">
+                    <div class="name-data">เป้าหมายที่ตรวจพบ</div>
+                    <div class="count-data" id="target_detection">จำนวนที่ตรวจพบ</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-10">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <!-- <strong>ผลการตรวจจับเป้าหมาย</strong> -->
+                    <figure class="highcharts-figure">
+                        <div id="container"></div>
+                        <!-- <p class="highcharts-description">
+                            column totals.
+                        </p> -->
+                        <p id="checkpoint_name"></p>
+
+                    </figure>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="js/jquery-3.5.1.min.js"></script>
+<script src="Highcharts/code/highcharts.js"></script>
+<script src="Highcharts/code/modules/series-label.js"></script>
+<script src="Highcharts/code/modules/exporting.js"></script>
+<script src="Highcharts/code/modules/export-data.js"></script>
+<script src="Highcharts/code/modules/accessibility.js"></script>
+<script>
+    $(document).ready(function() {
+
+        $.ajax({
+            url: "getStatTarget",
+            method: "GET",
+            dataType:"json",
+        	contentType: "application/json; charset=utf-8",
+            success: function(res) {
+                let data = res.data;
+
+                var myJSON = JSON.stringify(data);
+
+                // console.log(myJSON);
+                localStorage.setItem("testJSON", myJSON);
+                var text = localStorage.getItem("testJSON");
+                var obj = JSON.parse(text);
+                // console.log(obj);
+
+                var group = [];
+                var count = [];
+                var showcount = [];
+
+                for (let i in obj[0].target) {
+                    group += obj[0].target[i].target_group + ",";
+                    // count += obj[0].target[i].target_count + ",";
+
+                    $.each(data, function(index) {
+                        showcount.push(data[0].target[i].target_count);
+                    });
+                }
+
+                var str_group = '' + group + ':';
+                var str_group_rep = str_group.replace(',:', "");
+                var str_count_rep = showcount;
+
+                document.getElementById("checkpoint_name").innerHTML = obj[0].checkpoint_name;
+                document.getElementById("start_date").innerHTML = obj[0].start_date;
+                document.getElementById("detection").innerHTML = obj[0].detection;
+                document.getElementById("target_detection").innerHTML = obj[0].target_detection;
+                getData(str_group_rep, str_count_rep);
+            }
+        });
+
+    });
+
+    function getData(group, count) {
+
+        var ar = group.split(',');
+        var count = count;
+        console.log(count);
+
+
+        Highcharts.chart('container', {
+            title: {
+                text: 'ผลการตรวจจับเป้าหมาย'
+            },
+            xAxis: {
+                categories: ar,
+            },
+            yAxis: {
+                title: {
+                    text: 'จำนวน'
+                }
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                    type: 'column',
+                    name: 'ประเภทเป้าหมาย',
+                    data: count,
+                },
+               
+            ]
+        });
+    }
+</script>

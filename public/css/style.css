@@ -1,0 +1,77 @@
+.mt-10{
+    margin-top: 10px !important;
+}
+.name-data{
+    font-size: 16px;
+    text-align: center;
+}
+.box-count{
+    height: 120px;
+}
+.color-green{
+    border-radius: 20px !important;
+    color: #FFFFFF;
+    background: rgb(2,0,36);
+    background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(53,219,177,1) 0%, rgba(0,213,255,1) 80%);
+}
+.color-red{
+    border-radius: 20px !important;
+    color: #FFFFFF;
+    background: rgb(2,0,36);
+    background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(202,59,59) 0%, rgba(228,89,165) 81%);
+}
+.count-data{
+    margin-top: 10px !important;
+    text-align: right;
+    font-size: 40px;
+}
+.highcharts-figure,
+.highcharts-data-table table {
+    min-width: 310px;
+    max-width: 800px;
+    margin: 1em auto;
+}
+
+#container {
+    height: 400px;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #EBEBEB;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+    padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+
+.inline-block{
+    display: inline-block;
+}
