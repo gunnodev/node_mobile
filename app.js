@@ -32,11 +32,12 @@ app.get("/dashboard", (req, res) => {
 
 app.get("/getStatTarget", (req, res) => {
     //  getStatTarget
-    axios.get('http://' + setting.centreIP + ':7101/getStatTarget?checkpoint='+checkpoint_data.checkpoint)
+    axios.get('http://' + setting.centreIP + ':7100/vi2-centre/frontend/web/index.php?r=site/state&checkpoint_id='+checkpoint_data.checkpoint)
         .then(function (response) {
             console.log(response.data);
+            // let data = JSON.parse(response.data);
             res.status(200).json({
-                data: response.data.data,
+                data: response.data,
                 status: true
             });
         })

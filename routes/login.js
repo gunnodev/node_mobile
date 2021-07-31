@@ -19,6 +19,7 @@ router.post('/check_password', (req, res) => {
                 jwt.sign({user},'secretkey',(err,token)=>{
                     res.json({
                         token: token,
+                        checkpoint_name: "ด่านตรวจเฉพาะกิจ",
                         status: true
                     })
                 })
