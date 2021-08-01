@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const getDb = require('../util/database').getDb;
+const axios = require('axios');
+const setting = require('../util/setting');
 
 router.get('/get/camera_list', (req, res) => {
     const db = getDb();
@@ -19,22 +21,22 @@ router.get('/get/camera_list', (req, res) => {
 router.get('/get/connection_status', (req, res) => {
     // let profile_id = req.query.profile_id
     // online
-    app.get("/online", (req, res) => {
-        //  getStatTarget
-        axios.get('http://' + setting.centreIP + ':7101/online')
-            .then(function (response) {
-                res.status(200).json({
-                    "edge": true,
-                    "center": true
-                });
-            })
-            .catch(function (error) {
-                res.status(200).json({
-                    "edge": true,
-                    "center": false
-                });
+   
+    //  getStatTarget
+    axios.get('http://' + setting.centreIP + ':7101/online')
+        .then(function (response) {
+            res.status(200).json({
+                "edge": true,
+                "center": true
             });
-    });
+        })
+        .catch(function (error) {
+            res.status(200).json({
+                "edge": true,
+                "center": false
+            });
+        });
+   
 });
 
 router.get('/get/camera_image', (req, res) => {    

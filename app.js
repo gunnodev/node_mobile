@@ -32,20 +32,28 @@ app.get("/dashboard", (req, res) => {
 
 app.get("/getStatTarget", (req, res) => {
     //  getStatTarget
-    axios.get('http://' + setting.centreIP + ':7101/getStatTarget?checkpoint='+checkpoint_data.checkpoint)
-        .then(function (response) {
-            console.log(response.data);
-            res.status(200).json({
-                data: response.data.data,
-                status: true
-            });
-        })
-        .catch(function (error) {
-            console.log(error);
-            res.status(200).json({
-                status: false
-            });
-        });
+    const db = getDb();
+    db.collection('setting').findOne().then(checkpoint => {
+        checkpoint_data = checkpoint;
+        console.log(checkpoint);
+        if(checkpoint){
+            axios.get('http://' + setting.centreIP + ':7100/vi2-centre/frontend/web/index.php?r=site/state&checkpoint_id='+checkpoint._id)
+                .then(function (response) {
+                    console.log(response.data);
+                    // let data = JSON.parse(response.data);
+                    res.status(200).json({
+                        data: response.data,
+                        status: true
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    res.status(200).json({
+                        status: false
+                    });
+                });
+        }
+    });
 });
 
 //Verify Token
@@ -80,13 +88,10 @@ app.use((req, res, next) => {
 
 mongoConnect(() => {
     const db = getDb();
-    db.collection('setting').findOne().then(checkpoint => {
-        checkpoint_data = checkpoint;
-        console.log(checkpoint);
-        if(checkpoint){
-            app.listen(3004, () => {
-                console.log("start node port 3004");
-            });
-        }
-    });
+    db.collection('setting').deleteMany({}).then((result)=>{
+        app.listen(3004, () => {
+            console.log("start node port 3004");
+        });
+    })
+ 
 });
