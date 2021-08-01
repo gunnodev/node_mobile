@@ -9,28 +9,28 @@ router.post('/check_password', (req, res) => {
     let password = req.body.key;
     const db = getDb();
     console.log(password);
-    db.collection('setting').find({key: password}).next().then(checkpoint => {
-            
-        if(checkpoint){
+    db.collection('setting').find({ key: password }).next().then(checkpoint => {
+
+        if (checkpoint) {
             //Mock user
             const user = {
                 key: password
             }
 
             //send abpve as payload
-            jwt.sign({user},'secretkey',(err,token)=>{
+            jwt.sign({ user }, 'secretkey', (err, token) => {
                 res.json({
                     token: token,
                     checkpoint_name: checkpoint.site_name,
                     status: true
                 })
             })
-             
-        }else{
-            axios.post('http://' + setting.centreIP + ':7101/getCheckpoint', {'key': password})
+
+        } else {
+            axios.post('http://' + setting.centreIP + ':7101/getCheckpoint', { 'key': password })
                 .then(function (response) {
                     console.log(response.data.response.data);
-                    if(response.data.response.data){
+                    if (response.data.response.data) {
                         let checkpoint = response.data.response.data;
                         db.collection('setting').deleteMany({}).then(del => {
                             db.collection('setting').insert(checkpoint).then(result => {
@@ -40,7 +40,7 @@ router.post('/check_password', (req, res) => {
                                 });
                             })
                         })
-                    }else{
+                    } else {
                         res.status(200).json({
                             status: false
                         });

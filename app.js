@@ -1,4 +1,4 @@
-const express  = require('express');
+const express = require('express');
 const app = express();
 const path = require('path');
 const axios = require("axios");
@@ -27,7 +27,7 @@ app.use("/intel", intelRoutes);
 app.use("/edge", verifyToken, edgeRoutes);
 
 app.get("/dashboard", (req, res) => {
-    res.sendFile(path.join(__dirname+'/pages/index.html'));
+    res.sendFile(path.join(__dirname + '/pages/index.html'));
 })
 
 app.get("/getStatTarget", (req, res) => {
@@ -36,8 +36,8 @@ app.get("/getStatTarget", (req, res) => {
     db.collection('setting').findOne().then(checkpoint => {
         checkpoint_data = checkpoint;
         console.log(checkpoint);
-        if(checkpoint){
-            axios.get('http://' + setting.centreIP + ':7100/vi2-centre/frontend/web/index.php?r=site/state&checkpoint_id='+checkpoint._id)
+        if (checkpoint) {
+            axios.get('http://' + setting.centreIP + ':7100/vi2-centre/frontend/web/index.php?r=site/state&checkpoint_id=' + checkpoint._id)
                 .then(function (response) {
                     console.log(response.data);
                     // let data = JSON.parse(response.data);
@@ -57,12 +57,12 @@ app.get("/getStatTarget", (req, res) => {
 });
 
 //Verify Token
-function verifyToken(req,res,next){
+function verifyToken(req, res, next) {
     //Auth header value = > send token into header
 
     const bearerHeader = req.headers['authorization'];
     //check if bearer is undefined
-    if(typeof bearerHeader !== 'undefined'){
+    if (typeof bearerHeader !== 'undefined') {
 
         //split the space at the bearer
         const bearer = bearerHeader.split(' ');
@@ -75,7 +75,7 @@ function verifyToken(req,res,next){
         //next middleweare
         next();
 
-    }else{
+    } else {
         //Fobidden
         res.sendStatus(403);
     }
@@ -88,10 +88,10 @@ app.use((req, res, next) => {
 
 mongoConnect(() => {
     const db = getDb();
-    db.collection('setting').deleteMany({}).then((result)=>{
+    db.collection('setting').deleteMany({}).then((result) => {
         app.listen(3004, () => {
             console.log("start node port 3004");
         });
     })
- 
+
 });
